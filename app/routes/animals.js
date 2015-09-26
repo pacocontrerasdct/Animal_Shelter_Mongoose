@@ -3,12 +3,12 @@ var mongoose = require('mongoose')
 var animalSchema = new mongoose.Schema({
   name: String,
   breed: String,
-  dob: Date,
-  gender: String,
-  family: String,
-  status: String,
-  createAt: Date,
-  updateAt: Date
+ // dob: Date,
+ // gender: String,
+ // family: String,
+ // status: String,
+ // createAt: Date,
+ // updateAt: Date
 })
 
 // we can use instance methods

@@ -27,55 +27,29 @@ app.use(expressLayouts);
 app.use( express.static( path.join( __dirname, 'public' )));
 
 
-
-
-
-
-
-
-
-
-
-
 app.get('/', function(req, res){
   res.render('index');
 })
 
 // Animals index path
 app.get('/animals', function (req, res) {
-  // render animal index as JSON
-  //animals = mongoose.Animal;
-  //animals = animals.find();
-  //res.json(animals);
-  animals = [];
-  animals.push({
-    "name": "Toby",
-    "breed": "Greyhound",
-    "dob": "2010-02-23",
-    "gender": "male",
-    "family": "dogs",
-    "status": "orphan"});
-  animals.push({
-    "name": "john",
-    "breed": "Greyhound",
-    "dob": "2010-02-23",
-    "gender": "male",
-    "family": "dogs",
-    "status": "orphan"});
-
-
-  res.json(animals);
+  
+  Animal.find({}, function(err, animals) {
+      if (!err){ 
+          console.log(animals);
+          res.json(animals);
+      } else {throw err;}
+  });
 })
 
 app.post('/animals', function (req, res) {
   console.log(req.body);
-  var newAnimal = req.body
-//  // add a unique id
-//  Animal.length >= 1 ? newAnimal.id = Animal[Animal.length - 1].id + 1  : newAnimal.//id = 0
-//  // add new food to DB (array, really...)
-  newa = Animal.push(newAnimal)
+  var newAnimal = Animal(req.body);
+  newAnimal.save(function (err, animal) {
+    if (err) console.log(err);
+  })
   // send a response with newly created object
-  //res.json(newa)
+  res.json(newAnimal)
 })
 
 

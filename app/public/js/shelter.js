@@ -28,7 +28,7 @@ Animal = {
       $.each(animals, function(index, animal) {
         var template = '<li class="list-group-item">';
         template += animal.name;
-        template += '<span class="label label-default">' + animal.breed + '</span>';
+        template += ' <span class="label label-default">' + animal.breed + '</span>';
         template += '<button data-id="' + animal.id + '" type="button" class="js-close close" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
         template += '</li>';
         $('#animal-ul').append(template);

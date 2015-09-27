@@ -32,8 +32,7 @@ app.get('/', function(req, res){
 })
 
 // Animals index path
-app.get('/animals', function (req, res) {
-  
+app.get('/animals', function (req, res) {  
   Animal.find({}, function(err, animals) {
       if (!err){ 
           console.log(animals);
@@ -43,6 +42,7 @@ app.get('/animals', function (req, res) {
 })
 
 app.post('/animals', function (req, res) {
+  console.log("hi post");
   console.log(req.body);
   var newAnimal = Animal(req.body);
   newAnimal.save(function (err, animal) {
@@ -51,6 +51,47 @@ app.post('/animals', function (req, res) {
   // send a response with newly created object
   res.json(newAnimal)
 })
+
+app.delete('/animals/:id', function (req, res) {
+  console.log("hello app delete");
+  console.log(req.params.id);
+  var animalId = req.params.id;
+  console.log(animalId);
+    Animal.find({ _id : { $in: [animalId] } } , function(err, animalId) {
+        if (!err){ 
+            console.log(animalId);
+            console.log("inside find");
+            if ( Animal.remove({ _id : { $in: [animalId] } })  ){
+             console.log('removed!');
+             // render deleted object
+                res.json(animalId)
+           } else { console.log('failed!2'); }
+        } else { console.log('failed!1');}
+    });
+
+
+  //var animalId = req.animalParams
+  //Animal.remove(
+  //  { _id: animalId }
+  //)
+
+
+  console.log("hitting delete route");
+//  var animalId = req.params._id
+//  // finding an object with id = req.body.id out of the animals
+//  var animal = animals.filter(function(obj) {
+//    return obj.id === Number(animalId);
+//  })
+//  // remove animal from array
+//  console.log(animal);
+//  var index = animals.indexOf(animal[0])
+//  animals.splice(index, 1)
+//  // render deleted object
+//  res.json(animal)
+
+
+})
+
 
 
 

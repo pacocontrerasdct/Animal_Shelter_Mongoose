@@ -4,6 +4,7 @@ var debug = require('debug');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
 var expressLayouts = require('express-ejs-layouts');
 var app = express();
 var router = express.Router();
@@ -22,6 +23,16 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 app.use(expressLayouts);
+// Overwrites POST forms to DELETE values or any other kind we pass in as method
+app.use(methodOverride(function (req, res) {
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    // look in urlencoded POST bodies and delete it
+    var method = req.body._method;
+    delete req.body._method;
+    return method;
+  }
+}));
+
 
 
 app.use( express.static( path.join( __dirname, 'public' )));
@@ -48,35 +59,55 @@ app.post('/animals', function (req, res) {
   newAnimal.save(function (err, animal) {
     if (err) console.log(err);
   })
-  // send a response with newly created object
+  // newAnimal is { name: '13', breed: '13', _id: 560833aa8ac6238b099a3dc3 }
+  // send a response with newly created object shelter.js
   res.json(newAnimal)
 })
 
-app.delete('/animals/:id', function (req, res) {
+app.delete('/animals', function (req, res) {
   console.log("hello app delete");
-  console.log(req.params.id);
-  var animalId = req.params.id;
-  console.log(animalId);
-    Animal.find({ _id : { $in: [animalId] } } , function(err, animalId) {
-        if (!err){ 
-            console.log(animalId);
-            console.log("inside find");
-            if ( Animal.remove({ _id : { $in: [animalId] } })  ){
-             console.log('removed!');
-             // render deleted object
-                res.json(animalId)
-           } else { console.log('failed!2'); }
-        } else { console.log('failed!1');}
-    });
+  var deleteAnimal = req.body;
+  console.log(deleteAnimal);
+  
+  obj = JSON.stringify(deleteAnimal);
+  obj = obj.split("\"");
+  obj = obj[1];
+
+ // if (Animal.remove(deleteAnimal)){
+ //   console.log('removed!');
+ //   // render deleted object
+ //     res.json(deleteAnimal);
+ // } else { console.log('failed!'); }
 
 
-  //var animalId = req.animalParams
-  //Animal.remove(
-  //  { _id: animalId }
-  //)
+//  Animal.find({ _id : obj } , function(err, item) {
+//          if (!err){ 
+//              console.log(obj);
+//              console.log("inside find");
+//              Animal.remove(item);
+//              console.log('removed!');
+//              res.json(obj);
+//          } else { console.log('failed!1');}
+//  });
 
 
-  console.log("hitting delete route");
+      Animal.findOneAndRemove({'_id' : obj }, function (err,animal){
+        res.json(animal);
+      });
+
+
+//   if ( Animal.remove(deleteAnimal)  ){
+//    console.log('removed!');
+//    // render deleted object
+//       res.json(Animal);  
+
+//   } else { console.log('failed!2'); }
+
+
+
+
+
+  console.log("Deleting");
 //  var animalId = req.params._id
 //  // finding an object with id = req.body.id out of the animals
 //  var animal = animals.filter(function(obj) {
@@ -131,8 +162,6 @@ app.listen(3000)
 //    // Using the sayHello method with the Animal object 'toby'
 //    console.log(animal.sayHello());
 //  })
-
-
 
 
 

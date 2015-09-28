@@ -64,15 +64,11 @@ app.post('/animals', function (req, res) {
   res.json(newAnimal)
 })
 
-app.delete('/animals', function (req, res) {
+app.delete('/animals/:id', function (req, res) {
   console.log("hello app delete");
-  var idAnimal = req.body;
-  console.log(idAnimal);
-  obj = JSON.stringify(idAnimal);
-  obj = obj.split("\"");
-  objId = obj[1];
-
-  Animal.findOneAndRemove({'_id' : objId }, function (err,animal){
+  console.log(req.params['id']);
+  var idAnimal = req.params['id'];
+  Animal.findOneAndRemove({'_id' : idAnimal }, function (err,animal){
     res.json(animal);
   });
   console.log("Deleting");
@@ -96,9 +92,18 @@ app.delete('/animals', function (req, res) {
 })
 
 
-app.put('/animals', function (req, res) {
+app.put('/animals/:id', function (req, res) {
   //var idAnimal = req.body.data;
   console.log("hello app put");
+  console.log(req.params['id']);
+  idAnimal = req.params['id'];
+  Animal.findOne({'_id' : idAnimal }, function (err, doc){
+  doc.status = 'Abandon';
+  //doc.visits.$inc();
+  doc.save();
+  res.json(doc);
+});
+
 })
 
 
@@ -115,30 +120,6 @@ if (app.get('env') === 'development') {
 }
 
 app.listen(3000)
-
-
-
-
-//  var toby = Animal({
-//    "name": "Toby",
-//    "breed": "Greyhound",
-//    "dob": "2010-02-23",
-//    "gender": "male",
-//    "family": "dogs",
-//    "status": "orphan",
-//    "createAt": Date()
-//  })
-
-
-//  toby.save(function (err, animal) {
-//    if (err) console.log(err);
-//    console.log('toby has been created!');
-//    // Using the sayHello method with the Animal object 'toby'
-//    console.log(animal.sayHello());
-//  })
-
-
-
 
 
 

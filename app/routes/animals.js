@@ -7,7 +7,6 @@ var animalSchema = new mongoose.Schema({
   gender: String,
   family: String,
   status: String,
-  createAt: Date,
 })
 
 // we can use instance methods

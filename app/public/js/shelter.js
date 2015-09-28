@@ -16,11 +16,11 @@ View = {
     })
     $('#animalTemplate-ul').on('click', '.js-close', function(e) {
       e.preventDefault();
-      Animal.delete($(this).data('id'))
+      Animal.delete($(this).data)
     })
     $('#update-status').on('click', '.js-close', function(e) {
       e.preventDefault();
-      Animal.put($(this).data('id'))
+      Animal.put($(this).data)
     })
   }
 }
@@ -38,11 +38,11 @@ Animal = {
         animalTemplate += ' <br><span class="">DOB: ' + animal.dob + '</span>';
         animalTemplate += ' <br><span class="">Gender:' + animal.gender + '</span>';
         animalTemplate += ' <br><span class="">Family: ' + animal.family + '</span>';
-        animalTemplate += '<form method="POST" action="/animals" id="update-status">';
-        animalTemplate += '<input type="hidden" name="_method" value="PUT">';
-        animalTemplate += ' <br>Status: <a href="">' + animal.status + '</a>';       
+        animalTemplate += '<form method="POST" action="/animals/' + animal._id + '">';
+        animalTemplate += '<input type="hidden" name="_method" value="put">';
+        animalTemplate += ' <br>Status: <button>' + animal.status + '</button>';
         animalTemplate += '</form>';
-        animalTemplate += '<form method="POST" action="/animals">';
+        animalTemplate += '<form method="POST" action="/animals/' + animal._id + '">';
         animalTemplate += '<input type="hidden" name="_method" value="delete">';
         animalTemplate += '<br><button data-id="' + animal._id + '" type="submit" class="btn btn-default">Delete</button>';
         animalTemplate += '</form>';
@@ -64,10 +64,10 @@ Animal = {
         animalTemplate += ' <br><span class="">DOB: ' + animal.dob + '</span>';
         animalTemplate += ' <br><span class="">Gender:' + animal.gender + '</span>';
         animalTemplate += ' <br><span class="">Family: ' + animal.family + '</span>';
-        animalTemplate += '<form method="POST" action="/animals"  id="update-status">';
-        animalTemplate += '<input type="hidden" name="_method" value="PUT">';
-        animalTemplate += ' <br>Status: <a href="">' + animal.status + '</a>';       
-        animalTemplate += '</form>';   
+        animalTemplate += '<form method="POST" action="/animals/' + animal._id + '">';
+        animalTemplate += '<input type="hidden" name="_method" value="put">';
+        animalTemplate += ' <br>Status: <button>' + animal.status + '</button>';
+        animalTemplate += '</form>';      
         animalTemplate += '<form method="POST" action="/animals">';
         animalTemplate += '<input type="hidden" name="_method" value="delete">';
         animalTemplate += '<br><button data-id="' + animal._id + '" type="submit" class="btn btn-default">Delete</button>';

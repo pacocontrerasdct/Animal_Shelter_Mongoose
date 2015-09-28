@@ -66,12 +66,16 @@ app.post('/animals', function (req, res) {
 
 app.delete('/animals', function (req, res) {
   console.log("hello app delete");
-  var deleteAnimal = req.body;
-  console.log(deleteAnimal);
-  
-  obj = JSON.stringify(deleteAnimal);
+  var idAnimal = req.body;
+  console.log(idAnimal);
+  obj = JSON.stringify(idAnimal);
   obj = obj.split("\"");
-  obj = obj[1];
+  objId = obj[1];
+
+  Animal.findOneAndRemove({'_id' : objId }, function (err,animal){
+    res.json(animal);
+  });
+  console.log("Deleting");
 
  // if (Animal.remove(deleteAnimal)){
  //   console.log('removed!');
@@ -89,43 +93,13 @@ app.delete('/animals', function (req, res) {
 //              res.json(obj);
 //          } else { console.log('failed!1');}
 //  });
-
-
-      Animal.findOneAndRemove({'_id' : obj }, function (err,animal){
-        res.json(animal);
-      });
-
-
-//   if ( Animal.remove(deleteAnimal)  ){
-//    console.log('removed!');
-//    // render deleted object
-//       res.json(Animal);  
-
-//   } else { console.log('failed!2'); }
-
-
-
-
-
-  console.log("Deleting");
-//  var animalId = req.params._id
-//  // finding an object with id = req.body.id out of the animals
-//  var animal = animals.filter(function(obj) {
-//    return obj.id === Number(animalId);
-//  })
-//  // remove animal from array
-//  console.log(animal);
-//  var index = animals.indexOf(animal[0])
-//  animals.splice(index, 1)
-//  // render deleted object
-//  res.json(animal)
-
-
 })
 
 
-
-
+app.put('/animals', function (req, res) {
+  //var idAnimal = req.body.data;
+  console.log("hello app put");
+})
 
 
 // development error handler

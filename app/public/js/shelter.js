@@ -14,28 +14,40 @@ View = {
       e.preventDefault();
       Animal.create($(this).serialize())
     })
-    $('#animal-ul').on('click', '.js-close', function(e) {
+    $('#animalTemplate-ul').on('click', '.js-close', function(e) {
       e.preventDefault();
       Animal.delete($(this).data('id'))
+    })
+    $('#update-status').on('click', '.js-close', function(e) {
+      e.preventDefault();
+      Animal.put($(this).data('id'))
     })
   }
 }
 
 Animal = {
-  all: function() {
+  all: function(response) {
     $.get('/animals', function(response){
       console.log(response);
       var animals = response;
       $.each(animals, function(index, animal) {
-        var template = '<li class="list-group-item">';
-        template += animal.name;
-        template += ' <span class="label label-default">' + animal.breed + '</span>';
-        template += '<form method="POST" action="/animals" enctype="application/x-www-form-urlencoded">';
-        template += '<input type="hidden" name="_method" value="DELETE">';
-        template += '<button data-id="' + animal._id + '" type="submit" class="js-close close" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-        template += '</form>';       
-        template += '</li>';
-        $('#animal-ul').append(template);
+        // Extended Template
+        var animalTemplate = '<li class="list-group-item">';
+        animalTemplate += '<h4>' + animal.name + '</h4>';
+        animalTemplate += ' <br><span class="">Breed: ' + animal.breed + '</span>';
+        animalTemplate += ' <br><span class="">DOB: ' + animal.dob + '</span>';
+        animalTemplate += ' <br><span class="">Gender:' + animal.gender + '</span>';
+        animalTemplate += ' <br><span class="">Family: ' + animal.family + '</span>';
+        animalTemplate += '<form method="POST" action="/animals" id="update-status">';
+        animalTemplate += '<input type="hidden" name="_method" value="PUT">';
+        animalTemplate += ' <br>Status: <a href="">' + animal.status + '</a>';       
+        animalTemplate += '</form>';
+        animalTemplate += '<form method="POST" action="/animals">';
+        animalTemplate += '<input type="hidden" name="_method" value="delete">';
+        animalTemplate += '<br><button data-id="' + animal._id + '" type="submit" class="btn btn-default">Delete</button>';
+        animalTemplate += '</form>';
+        animalTemplate += '</li>';
+        $('#animalTemplate-ul').append(animalTemplate);
       })
     })
   },
@@ -46,12 +58,22 @@ Animal = {
     .done(function(response) {
       console.log(response);
       var animal = response;
-      var template = '<li class="list-group-item">';
-      template += animal.name;
-      template += ' <span class="label label-default">' + animal.breed + '</span>';
-      template += '<button data-id="' + animal._id + '" type="button" class="js-close close" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-      template += '</li>';
-      $('#animal-ul').prepend(template);
+      var animalTemplate = '<li class="list-group-item">';
+        animalTemplate += '<h4>' + animal.name + '</h4>';
+        animalTemplate += ' <br><span class="">Breed: ' + animal.breed + '</span>';
+        animalTemplate += ' <br><span class="">DOB: ' + animal.dob + '</span>';
+        animalTemplate += ' <br><span class="">Gender:' + animal.gender + '</span>';
+        animalTemplate += ' <br><span class="">Family: ' + animal.family + '</span>';
+        animalTemplate += '<form method="POST" action="/animals"  id="update-status">';
+        animalTemplate += '<input type="hidden" name="_method" value="PUT">';
+        animalTemplate += ' <br>Status: <a href="">' + animal.status + '</a>';       
+        animalTemplate += '</form>';   
+        animalTemplate += '<form method="POST" action="/animals">';
+        animalTemplate += '<input type="hidden" name="_method" value="delete">';
+        animalTemplate += '<br><button data-id="' + animal._id + '" type="submit" class="btn btn-default">Delete</button>';
+        animalTemplate += '</form>';
+        animalTemplate += '</li>';
+        $('#animalTemplate-ul').append(animalTemplate);
     })
     .done(function() {
       $('#animal-form').trigger('reset');
@@ -61,14 +83,29 @@ Animal = {
     console.log("in delete shelter");
     console.log(response);
     $.ajax({
-      type: 'DELETE',
+      type: 'delete',
       url: '/animals',
       data: response
     })
     .done(function(response) {
       console.log(response);
       console.log("hello response");
-      $('#animal-ul').empty()
+      $('#animalTemplate-ul').empty()
+      Animal.all()
+    })
+  },
+  put: function(response) {
+    console.log("in update shelter");
+    console.log(response);
+    $.ajax({
+      type: 'put',
+      url: '/animals',
+      data: response
+    })
+    .done(function(response) {
+      console.log(response);
+      console.log("hello response");
+      $('#animalTemplate-ul').empty()
       Animal.all()
     })
   }
@@ -76,6 +113,8 @@ Animal = {
 
 
 }
+
+
 
 
 

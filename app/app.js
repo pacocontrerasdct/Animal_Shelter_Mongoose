@@ -98,7 +98,11 @@ app.put('/animals/:id', function (req, res) {
   console.log(req.params['id']);
   idAnimal = req.params['id'];
   Animal.findOne({'_id' : idAnimal }, function (err, doc){
-  doc.status = 'Abandon';
+   if (doc.status == 'Adopt') {
+      doc.status = 'Abandon';
+   } else {
+      doc.status = 'Adopt';
+   }
   //doc.visits.$inc();
   doc.save();
   res.json(doc);
